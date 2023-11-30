@@ -40,11 +40,47 @@ window.addEventListener('load', (event) => {
 
   // Add all the divs to the HTML
   document.querySelector('#memory-board').innerHTML = html;
-
+  const pickedCards = []
   // Bind the click event of each element to a function
   document.querySelectorAll('.card').forEach((card) => {
     card.addEventListener('click', () => {
       // TODO: write some code here
+
+      if (!card.classList.contains("turned") && !card.classList.contains("blocked")) {
+        card.classList.toggle("turned")
+        pickedCards.push(card)
+
+
+        if (pickedCards.length === 2) {
+          const card1 = pickedCards[0];
+          const card2 = pickedCards[1];
+
+          const isPair = memoryGame.checkIfPair(card1, card2);
+
+          if (!isPair) {
+            setTimeout(() => {
+              // Flip back the cards after a short delay (you can adjust the delay as needed)
+              card1.classList.remove("turned");
+              card2.classList.remove("turned");
+            }, 1000);
+          } else {
+            card1.classList.toggle("blocked");
+            card2.classList.toggle("blocked");
+          }
+          // Check if the game is finished
+          if (memoryGame.checkIfFinished()) {
+            // Display a message or perform any other actions for game completion
+            alert('You won!!!');
+          }
+
+          // Clear the array of picked cards for the next round
+          pickedCards.length = 0;
+
+        }
+
+
+      }
+
       console.log(`Card clicked: ${card}`);
     });
   });
